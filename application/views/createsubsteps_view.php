@@ -233,20 +233,20 @@ $(document).ready(function(){
                     $("#message").val("");
                 $("#comment").html(response);
 
-                $("#responds").sortable({
-
-                          update : function () {
-                          serial = $('#responds').sortable('serialize'); // Encode a set of form elements as a string for submission. (see https://api.jquery.com/serialize/ for more info)
-                          $.ajax({
-                            url: "<?= base_url() ?>index.php/task/sortsubsteps/",
-                          type: "post",
-                          data: serial,
-                          error: function(){
-                          alert("theres an error with AJAX");
-                          }
-                          });
-                          }
-                          });
+                // $("#responds").sortable({
+                //
+                //           update : function () {
+                //           serial = $('#responds').sortable('serialize'); // Encode a set of form elements as a string for submission. (see https://api.jquery.com/serialize/ for more info)
+                //           $.ajax({
+                //             url: "<?= base_url() ?>index.php/task/sortsubsteps/",
+                //           type: "post",
+                //           data: serial,
+                //           error: function(){
+                //           alert("theres an error with AJAX");
+                //           }
+                //           });
+                //           }
+                //           });
 
                   $("#fadeout").remove();
                 //
@@ -290,20 +290,20 @@ $(document).ready(function(){
                           success:function(data){
                             $("#comment").html(data);
 
-                            $("#responds").sortable({
-
-                                      update : function () {
-                                      serial = $('#responds').sortable('serialize'); // Encode a set of form elements as a string for submission. (see https://api.jquery.com/serialize/ for more info)
-                                      $.ajax({
-                                        url: "<?= base_url() ?>index.php/task/sortsubsteps/",
-                                      type: "post",
-                                      data: serial,
-                                      error: function(){
-                                      alert("theres an error with AJAX");
-                                      }
-                                      });
-                                      }
-                                      });
+                            // $("#responds").sortable({
+                            //
+                            //           update : function () {
+                            //           serial = $('#responds').sortable('serialize'); // Encode a set of form elements as a string for submission. (see https://api.jquery.com/serialize/ for more info)
+                            //           $.ajax({
+                            //             url: "<?= base_url() ?>index.php/task/sortsubsteps/",
+                            //           type: "post",
+                            //           data: serial,
+                            //           error: function(){
+                            //           alert("theres an error with AJAX");
+                            //           }
+                            //           });
+                            //           }
+                            //           });
 
                               $("#fadeout").remove();
 
@@ -365,20 +365,20 @@ $(document).ready(function(){
         success:function(data){
           $("#comment").html(data);
 
-          $("#responds").sortable({
-
-                    update : function () {
-                    serial = $('#responds').sortable('serialize'); // Encode a set of form elements as a string for submission. (see https://api.jquery.com/serialize/ for more info)
-                    $.ajax({
-                      url: "<?= base_url() ?>index.php/task/sortsubsteps/",
-                    type: "post",
-                    data: serial,
-                    error: function(){
-                    alert("theres an error with AJAX");
-                    }
-                    });
-                    }
-                    });
+          // $("#responds").sortable({
+          //
+          //           update : function () {
+          //           serial = $('#responds').sortable('serialize'); // Encode a set of form elements as a string for submission. (see https://api.jquery.com/serialize/ for more info)
+          //           $.ajax({
+          //             url: "<?= base_url() ?>index.php/task/sortsubsteps/",
+          //           type: "post",
+          //           data: serial,
+          //           error: function(){
+          //           alert("theres an error with AJAX");
+          //           }
+          //           });
+          //           }
+          //           });
 
             $("#fadeout").remove();
 
