@@ -1,0 +1,201 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Variants extends CI_Controller {
+
+	public function index()
+	{
+		
+	}
+	
+	public function cw3()
+	{
+	if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('cw3_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+
+	public function normanCW()
+	{
+  
+	if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('normanCW_view',$data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	
+	public function logout()
+	{
+		$this->session->unset_userdata('logged_in');
+		$this->session->sess_destroy();
+		redirect(site_url('login'), 'refresh');
+	}
+
+
+	public function streamlinedCW()
+	{
+	if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('streamlinedCW_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	public function CWforWeb(){
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('CWforWeb_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	public function groupwareCW(){
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('groupwareCW_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	public function activityCW(){
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('activityCW_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	public function interactionCW(){
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('interactionCW', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	public function extendedCW(){
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('extendedCW_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	public function distributedCW(){
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('distributedCW_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	public function enhancedCW(){
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('enhancedCW_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	public function ownvariantCW(){
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('createownvariant_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+		public function createvariant()
+	{
+
+	if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+		//	 $data['data']='Persona list';
+			 $this->load->model('variant_model');
+			 $variantdata = array(
+      'variantname' => $this->input->post('variantname')
+    );
+ 
+		if($this->input->post('save')){
+           $data['results'] =  $this->variant_model->createvariant($variantdata);
+           $this->load->view('listofCWmethods_view',$data);
+					} else{
+			redirect('login', 'refresh');
+		}
+	}
+	}
+	
+	public function viewvariant($variantid){
+	    
+	        $this->load->helper(array('form','file','url'));
+	        if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['lastname'] = $session_data['lastname'];
+			$data['email'] = $session_data['email'];
+			$data['username'] = $session_data['username'];
+  //  $data['data'] = 'Edit persona';
+    $this->load->model('variant_model');
+    $data['results']=$this->variant_model->getvariant($variantid);
+          
+  
+    $this->load->view('viewvariant_view',$data);    
+}
+else{
+			redirect('login', 'refresh');
+		}
+}
+	}
+	
+

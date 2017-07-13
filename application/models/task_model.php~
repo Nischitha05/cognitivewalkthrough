@@ -1,0 +1,100 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Task_model extends CI_Model {
+
+	
+	public function createtask($taskdata,$personacheckdata){
+
+	   $conn= mysqli_connect("localhost","root","","cognitivewalkthrough");
+		$this->db->insert('task', $taskdata);
+		
+		if ($_POST['fields'] || $personacheckdata) {
+		 $inserted_task_id = $this->db->insert_id();
+		
+		 foreach ( $_POST['fields']as $key=>$value ) {
+		     $sql_website = sprintf("INSERT INTO method (methodname) VALUES ('%s')",
+						    	   mysqli_real_escape_string($conn,$value) );  
+			$this->db->query($sql_website);
+			$inserted_method_id = $this->db->insert_id();
+	$qry = "insert into task_method(taskid,methodid) values($inserted_task_id,$inserted_method_id)";
+     $this->db->query($qry); 
+}
+	foreach ( $personacheckdata as $row ) {
+			$qry1 = "insert into task_persona(taskid,personaid) values($inserted_task_id,$row)";
+			$this->db->query($qry1);
+		}
+        }
+        else{
+            
+        }
+
+   $this->db->select('method.methodid,method.methodname');
+   $this->db->from('method');
+   $this->db->join('task_method', 'method.methodid = task_method.methodid');
+   $this->db->where('task_method.taskid',$inserted_task_id);
+   $records = $this->db->get('');
+ return $records->result();
+}
+	
+	public function getTasklist()
+	{
+	   return $this->db
+	         ->select('taskid,taskname')
+	         ->from('task')
+	         ->get()
+	         ->result();
+	}
+	
+	
+	function get_method_by_task ($task){
+        $this->db->select('methodid, methodname');
+        $query = $this->db->get('method');
+       if($query->result()){
+            foreach ($query->result() as $method) {
+                $methods[$method->methodid] = $method->methodnamename;
+            }
+            return $methods;
+        } else {
+            return FALSE;
+        }
+    }
+	
+	
+	function view()
+	{
+	    
+	    return $this->db
+	         ->select('*')
+	         ->from('persona')
+	         ->get()
+	         ->result();
+	}
+
+	function insertstep($stepname,$image_data=array(),$methodid){
+	      $conn= mysqli_connect("localhost","root","","cognitivewalkthrough");
+	      $data = array(
+	                      'stepname' => $stepname,
+	                      'image'    => $image_data['file_name'],
+           //       'image'    => $image
+                        );
+
+          $this->db->insert('steps', $data);
+
+          $inserted_step_id= $this->db->insert_id();
+    
+          $qry = "insert into task_method(taskid,methodid) values($methodid,$inserted_step_id)";
+          $this->db->query($qry); 
+}
+    
+
+
+	public function getupdate($taskid){
+	    return $this->db->select('method.methodid,method.methodname')
+	                ->from('method')
+	                ->join('task_method', 'method.methodid = task_method.methodid')
+	                ->where('task_method.taskid',$taskid)
+	                ->get('')
+	                ->result();
+	}
+}

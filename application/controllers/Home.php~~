@@ -1,0 +1,84 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Home extends CI_Controller {
+
+	public function index()
+	{
+		if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['lastname'] = $session_data['lastname'];
+			$data['email'] = $session_data['email'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('home_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	public function createpersona()
+	{
+	if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('createpersona_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+
+	public function viewpersona()
+	{
+  //  $title['title'] ='Persona list';
+   
+     //$this->load->model("persona_model","m");
+     // $this->persona_model->view();
+	if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			 $data['data']='Persona list';
+    $this->load->model('persona_model');
+    $data['persona']=$this->persona_model->view();
+    $this->load->view('viewpersonalist',$data);
+			
+		//	$this->load->view('viewpersonalist', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	public function logout()
+	{
+		$this->session->unset_userdata('logged_in');
+		$this->session->sess_destroy();
+		redirect(site_url('login'), 'refresh');
+	}
+
+
+	public function createtask()
+	{
+  //  $title['title'] ='Persona list';
+   
+     //$this->load->model("persona_model","m");
+     // $this->persona_model->view();
+	if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			 $data['data']='Persona list';
+    $this->load->model('task');
+    $data['persona']=$this->task->view();
+   $this->load->view('createtask_view1',$data);
+			
+		//	$this->load->view('viewpersonalist', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+}

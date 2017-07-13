@@ -1,0 +1,280 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Task extends CI_Controller {
+
+	public function index()
+	{
+	   
+	   }
+	   
+	   
+	   public function methodlistview()
+	   {
+	       //$this->load->view('methodlist_view');
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$this->load->view('methodlist_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	 public function methodview()
+	   {
+	       //$this->load->view('methodlist_view');
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			$id= $this->input->post('methodfields'); 
+			echo $id;
+		
+	
+		$data['results']=$this->db
+	         ->select('methodid,methodname')
+	         ->from('method')
+	         ->where('methodid',$id)
+	         ->get()
+	         ->result();
+  
+			$this->load->view('methodcreate_view', $data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	
+	public function methodcreate()
+	   {
+	
+	    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+				$this->load->model('task_model');
+			 $taskdata = array(
+      'taskname' => $this->input->post('taskname')
+    );
+           
+             $methoddata=array(
+                 'methodname' => $this->input->post('methodname')
+                 );
+		if($this->input->post('save')){
+              $this->task_model->createtask($taskdata, $methoddata);
+			 $this->load->view('methodcreate_view',$data);
+		} else{
+			redirect('login', 'refresh');
+		}
+	}
+	   }
+	//   }
+	public function getPersona()
+	{
+	  if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+ 
+    $this->load->model('persona_model');
+    $get_persona=$this->persona_model->view();
+   // $data = array();
+     $data['personas'] = $get_persona;
+    $this->load->view('createtask_view',$data);
+      } else{
+			redirect('login', 'refresh');
+		}
+   
+	}
+	
+		public function createtask()
+	{
+
+	if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['username'] = $session_data['username'];
+			 $data['data']='Persona list';
+			 $this->load->model('task_model');
+			 $taskdata = array(
+      'taskname' => $this->input->post('taskname')
+    );
+             $personacheckdata = $this->input->post('personaid');
+           
+             $methoddata=array(
+                 'methodname' => $this->input->post('methodname')
+                 );
+		if($this->input->post('save')){
+           $data['gettask'] =  $this->task_model->createtask($taskdata,$personacheckdata);
+			 $this->load->view('methodlist_view',$data);
+					} else{
+			redirect('login', 'refresh');
+		}
+	}
+	}
+	
+	public function getpersonareults(){
+	 $id1= $this->input->post('persona_id'); //receiving the ajax post from view
+	 //Persona
+	  $this->db->select('persona.personaid,persona.firstname,persona.lastname');
+	 	$this->db->from('persona');
+	 	$this->db->join('task_persona', 'persona.personaid = task_persona.personaid');
+	 	$this->db->where('task_persona.taskid',$id1);
+	 	$records1 = $this->db->get('');
+
+	 $output1 = null;
+	 foreach ($records1->result() as $row1)
+		{
+				echo "<option value='".$row1->personaid."'>".ucfirst ($row1->firstname)." ".ucfirst ($row1->lastname)."</option>";
+		}
+
+		echo $output1; // HTML example
+		}
+		
+		
+	public function addsteps()
+	{
+	    
+			if($this->input->post('save')){
+			    
+			  
+			    $this->load->model('task_model');
+			  $this->task_model->addsteps();
+			       
+			      
+			      $this->load->view('methodcreate_view');
+			}
+		}
+	
+	
+	public function getmethod(){
+	 $id= $this->input->post('subject_id'); //receiving the ajax post from view 
+
+   $this->db->select('method.methodid,method.methodname');
+   $this->db->from('method');
+   $this->db->join('task_method', 'method.methodid = task_method.methodid');
+   $this->db->where('task_method.taskid',$id);
+   $records = $this->db->get('');
+   $output = null; 
+   foreach ($records->result() as $row)
+    {
+        echo "<option value='".$row->methodid."'>".$row->methodname."</option>";
+    }
+
+    echo $output; // HTML example
+    }
+    
+   public function editselectedtask($taskid){
+      $this->load->helper(array('form','file','url'));
+	        if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['lastname'] = $session_data['lastname'];
+			$data['email'] = $session_data['email'];
+			$data['username'] = $session_data['username'];
+  //  $data['data'] = 'Edit persona';
+    $this->load->model('task_model');
+    $data['task']=$this->task_model->getupdate($taskid);
+    
+    $data['personas']=$this->db
+                            ->select('personaid,firstname,lastname')
+                            ->from('persona')
+                            ->get()
+                            ->result();
+                            
+   $data['taskperson']= $this->db->select('personaid')
+   ->from('task_persona')
+  ->where('taskid',$taskid)
+  ->get('')
+  ->result();
+  
+    $data['results']=$this->db
+	         ->select('taskid,taskname')
+	         ->from('task')
+	         ->where('taskid',$taskid)
+	         ->get()
+	         ->result();
+    $this->load->view('edittask_view',$data);    
+}
+else{
+			redirect('login', 'refresh');
+		}
+}
+
+
+ function upload()
+    {
+       $config = array(
+'upload_path' => "./uploads/",
+'allowed_types' => "gif|jpg|png|jpeg|pdf",
+'overwrite' => TRUE,
+'max_size' => "2048000", // Can be set to particular file size , here it is 2 MB(2048 Kb)
+'max_height' => "768",
+'max_width' => "1024"
+);
+$this->load->library('upload', $config);
+if($this->upload->do_upload())
+{
+   $upload_data=  $this->upload->data();
+            $data['success_msg'] = '<div class="alert alert-success text-center">Your file  was successfully uploaded!</div>';
+            $this->load->view('methodcreate_view', $data);
+}
+else
+{
+  $upload_error = array('error' => $this->upload->display_errors());
+            $this->load->view('methodcreate_view', $upload_error);
+}
+}
+    }
+ /*function upload()
+    {
+        //set preferences
+        $config['upload_path'] = './uploads/';
+        $config['allowed_types'] = 'jpg|png';
+        $config['max_size']    = '';
+
+        //load upload class library
+        $this->load->library('upload', $config);
+      
+        
+        $total = count($_FILES['image']['name']);
+
+// Loop through each file
+for($i=0; $i<$total; $i++) {
+  //Get the temp file path
+  $tmpFilePath = $_FILES['image']['tmp_name'][$i];
+
+  //Make sure we have a filepath
+  if ($tmpFilePath != ""){
+    //Setup our new file path
+    $newFilePath = "./uploads/" . $_FILES['image']['name'][$i];
+
+    //Upload the file into the temp dir
+    if(move_uploaded_file($tmpFilePath, $newFilePath)) {
+
+     
+          
+            $upload_error = array('error' => $this->upload->display_errors());
+            $this->load->view('methodcreate_view', $upload_error);
+               }
+        }
+        else
+        {
+            
+          $upload_data=  $this->upload->data();
+            $data['success_msg'] = '<div class="alert alert-success text-center">Your file  was successfully uploaded!</div>';
+            $this->load->view('methodcreate_view', $data);
+               }
+        }
+    }*/
+      // }
+   
+          
+

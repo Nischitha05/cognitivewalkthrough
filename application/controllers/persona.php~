@@ -1,0 +1,122 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Persona extends CI_Controller {
+
+	public function index()
+	{
+	   }
+	
+
+	public function create(){
+	    $this->load->helper(array('form','file','url'));
+	        if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['lastname'] = $session_data['lastname'];
+			$data['email'] = $session_data['email'];
+			$data['username'] = $session_data['username'];
+			
+			$this->load->library('form_validation');
+	 // $this->load->library(array('form_validation','upload'));
+	   $this->form_validation->set_rules('firstname','First name','trim|required');
+		$this->form_validation->set_rules('lastname','Last name','trim|required');
+		$this->form_validation->set_rules('age','Age','trim|required|numeric');
+		$this->form_validation->set_rules('interests','Interests','trim|required');
+		$this->form_validation->set_rules('hobby','Hobby','trim|required');
+		$this->form_validation->set_rules('aim','Aim','trim|required');
+		$this->form_validation->set_rules('qualification','Qualification','trim|required');
+	    $this->form_validation->set_rules('occupation','Occupation','trim|required');
+		$this->form_validation->set_rules('browsers_used','Browswers used','trim|required');
+		$this->form_validation->set_rules('gadgets_owned','Gadgets owned','trim|required');
+	//	$this->form_validation->set_rules('description','Add description','trim|required');
+		//$this->form_validation->set_rules('image','Add a picture','trim|required');
+		if($this->form_validation->run() == FALSE)
+		{
+		    $this->load->view('createpersona_view',$data);
+		}
+		else{
+		    $this->load->model('persona_model');
+		    if($this->input->post('save'))
+		    {
+		 
+		         $this->persona_model->create();
+		        $this->load->view('persona_view',$data);
+		    }
+		    else
+{
+   $this->load->view('createpersona_view',$data);
+}
+		}
+	}
+}
+/*
+
+public function viewlist(){
+  //  $title['title'] ='Persona list';
+    $data['data']='Persona list';
+    $this->load->model('persona_model');
+    $data['persona']=$this->persona_model->view();
+    $this->load->view('viewpersonalist',$data);
+     //$this->load->model("persona_model","m");
+     // $this->persona_model->view();
+}*/
+
+
+public function edit($personaid){
+      $this->load->helper(array('form','file','url'));
+	        if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['lastname'] = $session_data['lastname'];
+			$data['email'] = $session_data['email'];
+			$data['username'] = $session_data['username'];
+  //  $data['data'] = 'Edit persona';
+    $this->load->model('persona_model');
+    $data['persona']=$this->persona_model->getupdate($personaid);
+    $this->load->view('editpersona_view',$data);    
+}
+}
+
+public function update(){
+    if($this->session->userdata('logged_in')){
+			$session_data = $this->session->userdata('logged_in');
+			$data['adminid'] = $session_data['adminid'];
+			$data['firstname'] = $session_data['firstname'];
+			$data['lastname'] = $session_data['lastname'];
+			$data['email'] = $session_data['email'];
+			$data['username'] = $session_data['username'];
+    $this->load->helper(array('form','url'));
+    $this->load->library('form_validation');
+    $this->form_validation->set_rules('firstname','First name','trim|required');
+		$this->form_validation->set_rules('lastname','Last name','trim|required');
+		$this->form_validation->set_rules('age','Age','trim|required|numeric');
+		$this->form_validation->set_rules('interests','Interests','trim|required');
+		$this->form_validation->set_rules('hobby','Hobby','trim|required');
+		$this->form_validation->set_rules('aim','Aim','trim|required');
+		$this->form_validation->set_rules('qualification','Qualification','trim|required');
+	    $this->form_validation->set_rules('occupation','Occupation','trim|required');
+		$this->form_validation->set_rules('browsers_used','Browswers used','trim|required');
+		$this->form_validation->set_rules('gadgets_owned','Gadgets owned','trim|required');
+
+		$personaid=$this->input->post('personaid');
+		if($this->form_validation->run()==false){
+		    $this->edit($personaid);
+		}else{
+		
+		    $this->load->model('persona_model');
+		    $this->persona_model->update($data,$personaid);
+		   $this->load->view('personaonedit_view',$data);
+		}
+}
+}
+
+public function delete($personaid){
+    $this->load->model('persona_model');
+    $this->persona_model->delete($personaid);
+    redirect('home/viewpersona');
+}
+
+}
